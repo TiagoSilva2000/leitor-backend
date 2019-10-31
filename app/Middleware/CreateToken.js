@@ -11,6 +11,7 @@ class CreateToken {
    */
   async handle ({ request, response, auth }, next) {
     await next()
+    console.log(auth.authenticatorInstance)
     const data = request.only(['email', 'password'])
     try {
       await auth.attempt(data.email, data.password)

@@ -2,17 +2,22 @@
 
 class LoginController {
   async store ({ request, auth }) {
-    const { email, password } = request.only(['email', 'password'])
+    const { email, password, redactor_id } = request.only(['email', 'password'])
 
     const user = await auth.attempt(email, password)
 
     return user
   }
 
-  async destroy ({ request, auth }) {
-    await auth.logout()
+  async destroy ({ auth, response }) {
+    try
+    {
+      await auth.logout()
 
-    return 'ok, mah boy'
+      return response.send({message:"success!"})
+    } catch (e) {
+      return response.send({message:"error!"})
+    }
   }
 }
 

@@ -14,25 +14,28 @@ class SaveFile {
    */
   async handle ({ request, response }, next) {
     try {
-      if (!request.file('file')) return
+      if (!request.file('file_id')) { return await next() }
 
-      const upload = request.file('file', {
-        size: '1mb',
+      const upload = request.file('file_id', {
         types: ['application', 'image'],
-        extnames: ['pdf', 'jpeg', 'png']
+        size: '1mb',
+        extnames: ['pdf', 'jpg', 'png']
       })
+      const fileError = upload.error()
 
-      if (upload.error) {
+      if (Object.entries(fileError).length === 0 &&
+      fileError.constructor() === Object) {
         return response
-          .status(400)
-          .send({ error: { message: 'unallowed format' } })
-      }
+        .status(400)
+          .send(fileError)
+        }
 
-      const sysName = `${Date.now()}.${upload.subtype}`
+      const sysName = `${Date.now()}l.${upload.subtype}`
       await upload.move(Helpers.tmpPath('uploads'), { name: sysName })
 
       if (!upload.moved()) {
-        throw new Error()
+        // throw new Error()
+        return response.send(upload.error())
       }
 
       const file = await File.create({

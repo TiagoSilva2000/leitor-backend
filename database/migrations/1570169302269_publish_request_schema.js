@@ -25,6 +25,7 @@ class PublishRequestSchema extends Schema {
       table.text('description').notNullable()
       table.text('answer')
       table.string('answered_by')
+      table.string('format_date').notNullable()
       table.timestamps()
     })
   }

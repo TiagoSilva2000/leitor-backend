@@ -9,8 +9,10 @@ class RedactorSchema extends Schema {
       table.increments()
       table.string('username', 80).notNullable().unique()
       table.string('email', 254).notNullable().unique()
-      table.string('redactor_id').notNullable().unique()
+      table.string('redactor_id', 80).notNullable().unique()
       table.string('password').notNullable()
+      table.integer('pub_req_answ').defaultTo(0)
+      table.integer('pub_req_del').defaultTo(0)
       table.timestamps()
     })
   }

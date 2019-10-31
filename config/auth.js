@@ -17,7 +17,6 @@ module.exports = {
   |
   */
   authenticator: 'session',
-
   /*
   |--------------------------------------------------------------------------
   | Session
@@ -30,6 +29,21 @@ module.exports = {
   session: {
     serializer: 'lucid',
     model: 'App/Models/User',
+    scheme: 'session',
+    uid: 'email',
+    password: 'password',
+  },
+
+  user: {
+    serializer: 'lucid',
+    model: 'App/Models/User',
+    scheme: 'session',
+    uid: 'email',
+    password: 'password'
+  },
+  redactor: {
+    serializer: 'lucid',
+    model: 'App/Models/Redactor',
     scheme: 'session',
     uid: 'email',
     password: 'password'
@@ -90,5 +104,6 @@ module.exports = {
     scheme: 'api',
     uid: 'email',
     password: 'password'
-  }
+  },
+
 }

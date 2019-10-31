@@ -15,7 +15,8 @@ class RedactorController {
     const data = request.only([
       'username',
       'password',
-      'email'
+      'email',
+      'redactor_id'
     ])
 
     const newRedactor = await Redactor.create(data)

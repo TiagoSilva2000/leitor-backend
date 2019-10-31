@@ -16,16 +16,18 @@ const File = use('App/Models/File')
 class UserToPubController {
   async store ({ params, request, response }) {
     try {
+      const currDate = new Date()
       const data = request.only([
         'name',
         'description'
       ])
-
       const newPubReq = await PubReq.create({
         ...data,
         file_id: request.file_id,
-        user_id: params.id
+        user_id: params.id,
+        format_date:`${currDate.getDate()} ${currDate.getMonth()} ${currDate.getFullYear()}`
       })
+
       return newPubReq
     } catch (error) {
       return response
@@ -63,22 +65,25 @@ class UserToPubController {
     if (pubRequest.file_id) {
       const file = await File.findOrFail(pubRequest.file_id)
       return response
-        .download(Helpers.tmpPath(`uploads/${file.file}`))
-        // .send(pubRequest)
+        .send({pubRequest, linkToFile:Helpers.tmpPath(`uploads/${file.file}`)})
     }
 
-    return pubRequest
+    return response.send(pubRequest)
   }
 
   async update ({ params, request }) {
-    const pubRequest = await PubReq.findOrFail(params.id)
+    const pubRequest = await PubReq.findOrFail(params.pubId)
     const updates = request.only([
-      'file_id',
       'name',
       'description'
     ])
 
-    pubRequest.merge(updates)
+    if (request.file('file_id') && pubRequest.file_id) {
+      const file = await File.findOrFail(pubRequest.file_id)
+      await file.delete()
+    }
+
+    pubRequest.merge({...updates, file_id:(request.file_id || pubRequest.file_id)})
 
     await pubRequest.save()
 
@@ -87,8 +92,9 @@ class UserToPubController {
 
   async destroy ({ params }) {
     const pubReq = await PubReq.findOrFail(params.id)
-
+    const file = await File.findOrFail(pubReq.file_id)
     await pubReq.delete()
+    await file.delete()
 
     return pubReq
   }
