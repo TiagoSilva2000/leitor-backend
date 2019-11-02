@@ -9,10 +9,10 @@ class CreateToken {
    * @param {Request} ctx.request
    * @param {Function} next
    */
-  async handle ({ request, response, auth }, next) {
+  async handle ({ request, response, auth}, next) {
     await next()
-    console.log(auth.authenticatorInstance)
-    const data = request.only(['email', 'password'])
+    const data = request.only(['email', 'password', 'identifier'])
+
     try {
       await auth.attempt(data.email, data.password)
     } catch (error) {

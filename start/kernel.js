@@ -42,7 +42,8 @@ const namedMiddleware = {
   guest: 'Adonis/Middleware/AllowGuestOnly',
   saveFile: 'App/Middleware/SaveFile',
   createToken: 'App/Middleware/CreateToken',
-  autoLogout: 'App/Middleware/AutoLogout'
+  autoLogout: 'App/Middleware/AutoLogout',
+  IDCheck: 'App/Middleware/IdCheck'
 }
 
 /*

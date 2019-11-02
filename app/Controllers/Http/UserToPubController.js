@@ -37,7 +37,7 @@ class UserToPubController {
   }
 
   async index ({ params, request }) {
-    const { fl: file, answ: answer } = request.get()
+    const { fl: file, answ: answer } = request.all()
     const { username, email } = await User.findOrFail(params.id)
     let pubRequests = {}
 

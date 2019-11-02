@@ -1,12 +1,14 @@
 'use strict'
 
+const Redactor = use('App/Models/Redactor')
+
 class LoginController {
   async store ({ request, auth }) {
-    const { email, password, redactor_id } = request.only(['email', 'password'])
+    const { email, password } = request.only(['email', 'password', 'identifier'])
 
-    const user = await auth.attempt(email, password)
+    const {username, redFlag, id, pub_req_sent, pub_req_answ} = await auth.attempt(email, password)
 
-    return user
+    return {username, redFlag, id, pub_req_sent, pub_req_answ }
   }
 
   async destroy ({ auth, response }) {

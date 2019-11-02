@@ -24,7 +24,6 @@ class User extends Model {
   publishrequest () {
     return this.hasMany('App/Models/PublishRequest')
   }
-
   /**
    * A relationship on tokens is required for auth to
    * work. Since features like `refreshTokens` or
@@ -37,6 +36,10 @@ class User extends Model {
    */
   tokens () {
     return this.hasMany('App/Models/Token')
+  }
+
+  redactors () {
+    return this.hasOne('App/Models/Redactor')
   }
 }
 

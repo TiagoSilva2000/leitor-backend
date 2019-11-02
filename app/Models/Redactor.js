@@ -12,15 +12,15 @@ class Redactor extends Model {
       if (redInst.dirty.password) {
         redInst.password = await Hash.make(redInst.password)
       }
-      if (redInst.dirty.redactor_id) {
-        redInst.redactor_id = await Hash.make(redInst.redactor_id)
+      if (redInst.dirty.identifier) {
+        redInst.identifier = await Hash.make(redInst.identifier)
       }
     })
 
   }
 
-  tokens () {
-    return this.hasMany('App/Models/Token')
+  users () {
+    return this.belongsTo('App/Models/User')
   }
 }
 

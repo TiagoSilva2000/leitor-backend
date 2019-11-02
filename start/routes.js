@@ -2,6 +2,7 @@
 
 const Route = use('Route')
 
+// dev
 Route.group(() => {
   Route.delete('users/reset', 'UserController.reset')
   Route.on('/').render('welcome')
@@ -9,33 +10,37 @@ Route.group(() => {
   Route.get('users', 'UserController.index')
 })
 
+
 Route.group(() => {
   Route.post('users/signup', 'UserController.store')
   .validator('RegisterUser')
-  .middleware(['autoLogout', 'createToken'])
+  .middleware(['createToken'])
 
   Route.post('redactors/signup', 'RedactorController.store')
   .validator('RegisterRedactor')
-  .middleware(['autoLogout', 'createToken'])
+  .middleware(['createToken'])
 
+  Route.post('login', 'LoginController.store')
 }).middleware('guest')
 
-Route.post('login', 'LoginController.store').middleware(['autoLogout'])
-Route.delete('logout', 'LoginController.destroy').middleware('auth')
-
 
 Route.group(() => {
-  Route.resource('users', 'UserController').except(['store', 'index'])
+  Route.resource('users', 'UserController')
+    .except(['store', 'index', 'edit', 'create', 'show'])
+  Route.get('users/:id', 'UserController.show').middleware(['IDCheck'])
+
+  Route.resource('users/:id/pubRequests', 'UserToPubController')
+    .middleware(['saveFile'])
     .except(['edit', 'create'])
 
-  Route.resource('users/:id/pubRequests', 'UserToPubController').middleware(['saveFile'])
-    .except(['edit', 'create'])
-}).middleware('auth:user')
-
-
-Route.group(() => {
   Route.resource('redactors', 'RedactorController')
-      .except(['index', 'store', 'edit', 'create'])
-  Route.resource('redactors/pubRequests', 'RedToPubController')
-      .except(['store', 'edit', 'create'])
-}).middleware('auth:redactor')
+    .except(['index', 'store', 'edit', 'create', 'show'])
+  Route.get('redactors/:id', 'RedactorController.show').middleware(['IDCheck'])
+
+  Route.resource('redactors/:usrID/pubRequests', 'RedToPubController')
+    .except(['store', 'edit', 'create'])
+    .middleware(['IDCheck'])
+
+  Route.get('pubRequests/:id/:fileId', 'FileController.show').middleware(['IDCheck'])
+  Route.delete('logout', 'LoginController.destroy')
+}).middleware('auth')

@@ -2,7 +2,7 @@
 
 const PubReq = use('App/Models/PublishRequest')
 const File = use('App/Models/File')
-const Database = use('Database')
+const Helpers = use('Helpers')
 
 class RedToPubController {
   async index ({request, response}) {
@@ -21,19 +21,27 @@ class RedToPubController {
     return pubRequests
   }
 
-  async show ({params}) {
-    const pubRequest = await PubReq.findOrFail(params.pubId)
+  async show ({params, response}) {
+    const pubRequest = await PubReq.findOrFail(params.id)
 
+    if (pubRequest.file_id) {
+      const file = await File.findOrFail(pubRequest.file_id)
+      return response
+        .send({pubRequest, linkToFile:Helpers.tmpPath(`uploads/${file.file}`)})
+    }
 
-    return pubRequest
+    return response.send(pubRequest)
   }
 
   async update ({ params, request }) {
-    const pubRequest = await PubReq.findOrFail(params.pubId)
+    const pubRequest = await PubReq.findOrFail(params.id)
     const updates = request.only([
       'answer',
       'answered_by'
     ])
+    if (!updates.answered_by)
+      updates.answered_by = null
+
 
     pubRequest.merge(updates)
 
@@ -43,7 +51,7 @@ class RedToPubController {
   }
 
   async destroy ({params}) {
-    const pubRequest = await PubReq.findOrFail(params.pubId)
+    const pubRequest = await PubReq.findOrFail(params.id)
 
     if (pubRequest.file_id) {
       const file = await File.findOrFail(pubRequest.file_id)

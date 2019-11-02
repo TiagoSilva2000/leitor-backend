@@ -16,7 +16,7 @@ class RegisterRedactor {
       email: 'required|email',
       password: 'required|min:8|confirmed',
       username: 'required',
-      redactor_id:'required'
+      identifier:'required'
     }
   }
 
@@ -28,7 +28,7 @@ class RegisterRedactor {
       'password.required': 'You must provide a password!',
       'password.confirmed': 'You must provide a second copy of your password',
       'username.required': 'You must provide a username!',
-      'redactor_id.required': 'You must provide a redactor id.'
+      'identifier.required': 'You must provide a identifier.'
     }
   }
 }

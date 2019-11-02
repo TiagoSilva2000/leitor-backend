@@ -14,7 +14,7 @@ module.exports = {
   |
   | Available Schemes - basic, session, jwt, api
   | Available Serializers - lucid, database
-  |
+  // |
   */
   authenticator: 'session',
   /*
