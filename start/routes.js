@@ -9,7 +9,11 @@ Route.group(() => {
   Route.get('redactors', 'RedactorController.index')
   Route.get('users', 'UserController.index')
 })
+Route.post('/contact', async ({request}) => {
+  const {name, email, subject, message} = request.only(['name', 'email', 'subject','message'])
 
+  return {name, email, subject, message}
+})
 
 Route.group(() => {
   Route.post('users/signup', 'UserController.store')
